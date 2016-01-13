@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <title>Carlos & Dani To do List</title>
+    <meta charset="UTF-8">
+        <link rel="stylesheet" href="lib/Bootstrap/bootstrap.min.css" />
+        <link rel="stylesheet" href="lib/jQuery/jquery.ui.min.css" />
+        <link rel="stylesheet" href="assets/todo.css" />
+    </head>
+
+    <body class="well">
+        <div id="container">
+
+            <div id="header"> To Do List </div>
+
+            <div class="task-list task-container" id="pending">
+                <h3>Pendiente</h3>
+            </div>
+            <div class="task-list task-container" id="inProgress">
+                <h3>En progreso</h3>
+            </div>
+
+            <div class="task-list task-container" id="completed">
+                <h3>Completado</h3>
+            </div>
+
+            <div class="task-list">
+                <h3>Añadir tarea</h3>
+                <form id="todo-form">
+                    <input type="text" placeholder="Titulo" />
+                    <textarea placeholder="Descripción"></textarea>
+                    <input type="text" id="datepicker" placeholder="(dd/mm/yyyy)" />
+                    <input type="button" class="btn btn-primary" value="Añadir tarea" />
+                </form>
+
+            </div>
+        </div>
+    </body>
+</html>
