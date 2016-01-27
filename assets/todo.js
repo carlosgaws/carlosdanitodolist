@@ -13,15 +13,73 @@ data = data || {};
             taskId: "task-",
             formId: "todo-form",
             dataAttribute: "data",
-
+            deleteDiv: "delete-div"
         }, codes = {
             "1" : "#pending",
             "2" : "#inProgress",
             "3" : "#completed"
         };
 
+    todo.init = function (options) {
 
-    // Add Task
+        options = options || {};
+        options = $.extend({}, defaults, options);
+
+        $.each(data, function (index, params) {
+            generateElement(params);
+        });
+
+        // Funcion eliminar categoria
+        $.each(codes, function (index, value) {
+            $(value).droppable({
+                drop: function (event, ui) {
+                        var element = ui.helper,
+                            css_id = element.attr("id"),
+                            id = css_id.replace(options.taskId, ""),
+                            object = data[id];
+
+                            // Eliminamos antiguo objeto
+                            removeElement(object);
+
+                            // Cambiamos el codigo del objeto
+                            object.code = index;
+
+                            // Generamos un nuevo elemento
+                            generateElement(object);
+
+                            // Guardamos en local storage
+                            data[id] = object;
+                            localStorage.setItem("todoData", JSON.stringify(data));
+
+                            // Escondemos el area que ocupaba la categoria
+                            $("#" + defaults.deleteDiv).hide();
+                    }
+            });
+        });
+
+        // Funcion de eliminar div
+        $("#" + options.deleteDiv).droppable({
+            drop: function(event, ui) {
+                var element = ui.helper,
+                    css_id = element.attr("id"),
+                    id = css_id.replace(options.taskId, ""),
+                    object = data[id];
+
+                // Eliminamos elemento antiguo
+                removeElement(object);
+
+                // Guardamos en local storage
+                delete data[id];
+                localStorage.setItem("todoData", JSON.stringify(data));
+
+                // Escondemos el area del div
+                $("#" + defaults.deleteDiv).hide();
+            }
+        })
+
+    };
+
+    // Añadimos tarea
     var generateElement = function(params){
         var parent = $(codes[params.code]),
             wrapper;
@@ -51,8 +109,22 @@ data = data || {};
             "text": params.description
         }).appendTo(wrapper);
 
-	   
+	    wrapper.draggable({
+            start: function() {
+                $("#" + defaults.deleteDiv).show();
+            },
+            stop: function() {
+                $("#" + defaults.deleteDiv).hide();
+            },
+	        revert: "invalid",
+	        revertDuration : 200
+        });
 
+    };
+
+    // Eliminamos tarea
+    var removeElement = function (params) {
+        $("#" + defaults.taskId + params.id).remove();
     };
 
     todo.add = function() {
@@ -83,14 +155,14 @@ data = data || {};
             description: description
         };
 
-        // Saving element in local storage
+        // Guardamos elemento en lcoal storage 
         data[id] = tempData;
         localStorage.setItem("todoData", JSON.stringify(data));
 
-        // Generate Todo Element
+        // Generamos elemento todo
         generateElement(tempData);
 
-        // Reset Form
+        // Reseteamos form
         inputs[0].value = "";
         inputs[1].value = "";
         inputs[2].value = "";
@@ -126,5 +198,10 @@ data = data || {};
         });
     };
 
+    todo.clear = function () {
+        data = {};
+        localStorage.setItem("todoData", JSON.stringify(data));
+        $("." + defaults.todoTask).remove();
+    };
 
 })(todo, data, jQuery);
