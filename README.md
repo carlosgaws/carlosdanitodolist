@@ -15,3 +15,6 @@ Ninguna.
 #Contributions
 
 Carlos González Calero y Daniel Avellaneda Gutierrez (Developers)
+
+# Wiki
+https://github.com/carlosgaws/carlosdanitodolist/wiki
